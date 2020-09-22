@@ -22,4 +22,5 @@ public class GameConfigs
     public final static String BLACK_WON = " ● WON!!!";
     public final static String WHITE_WON = "○ WON!!!";
     public final static String DRAW = "DRAW!!!";
+    public final static String RESET = "RESET";
 }

@@ -3,6 +3,7 @@ package Reversi;
 import javax.swing.*;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,12 +16,12 @@ public class GameBoard {
 
     private ChessButton[][] chessOnBoard = new ChessButton[BOARD_SIZE][BOARD_SIZE];
     private Chess[][] availableMove = new Chess[BOARD_SIZE][BOARD_SIZE];
-    private JButton gameDescriber = new JButton();
-    private JButton blackCount = new JButton();
-    private JButton whiteCount = new JButton();
+    private JButton gameDescriber;
+    private JButton blackCount;
+    private JButton whiteCount;
     private JFrame frame = new JFrame("Reversi");
-    private JPanel panel = new JPanel();
-    private boolean isBlackTerm = true;
+    private JPanel panel;
+    private boolean isBlackTerm;
 
     public GameBoard()
     {
@@ -31,14 +32,21 @@ public class GameBoard {
     private void initializeChess()
     {
         frame.getContentPane();
+        panel = new JPanel();
         panel.setLayout(null);
 
         setColumnName();
         setRowName();
         setupChessOnBoard();
+
+        gameDescriber = new JButton();
+        blackCount = new JButton();
+        whiteCount = new JButton();
+
         setUtilButtonInfo(gameDescriber, BLACK_TURN, 580, 240);
         setUtilButtonInfo(blackCount, BLACK_CHESS + " 2", 580, 300);
         setUtilButtonInfo(whiteCount, WHITE_CHESS + " 2", 580, 360);
+        setupResetButton(RESET, 580, 180);
 
         chessOnBoard[3][3].setText(WHITE_CHESS);
         chessOnBoard[4][4].setText(WHITE_CHESS);
@@ -50,6 +58,7 @@ public class GameBoard {
         frame.setSize(740,540);
         frame.setVisible(true);
         frame.setExtendedState(Frame.MAXIMIZED_BOTH);
+        refreshJframe();
     }
 
     private void setupChessOnBoard()
@@ -110,8 +119,27 @@ public class GameBoard {
         panel.add(button);
     }
 
+    private void handleResetButtonClick(ActionEvent e, GameBoard gb)
+    {
+        frame.remove(panel);
+        gb.initializeChess();
+        gb.initialAvailableMove();
+    }
+
+    private void setupResetButton(String text, int xLocation, int yLocation)
+    {
+        JButton jbutton  = new JButton(text);
+        jbutton.setPreferredSize(new Dimension(200, 60));
+        jbutton.setBounds(xLocation, yLocation,200,60);
+        jbutton.setFont(new Font("Arial", Font.PLAIN, 12));
+        jbutton.addActionListener(e -> handleResetButtonClick(e, this));
+        panel.add(jbutton);
+    }
+
     private void initialAvailableMove()
     {
+        isBlackTerm = true;
+
         for(int i = 0; i< BOARD_SIZE ; i++)
         {
             for(int j = 0; j< BOARD_SIZE; j++)
